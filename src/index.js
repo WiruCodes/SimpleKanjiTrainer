@@ -4,6 +4,9 @@ import App from './App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+    <>
+    {localStorage.setItem('chakra-ui-color-mode', 'dark')}
     <App />
+    </>
 );
 

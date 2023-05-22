@@ -1,5 +1,5 @@
 import './App.css';
-import { Button, ChakraProvider, Grid, GridItem, Heading, Input, Spinner, Stack, StackDivider, Text } from '@chakra-ui/react'
+import { Button, ChakraProvider, Grid, GridItem, Heading, Input, Spinner, Stack, StackDivider, Text, ColorModeScript, extendTheme, useColorMode, ThemeConfig } from '@chakra-ui/react'
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
 import { Box } from '@chakra-ui/react';
 import { useEffect, useState, useRef } from 'react';
@@ -74,9 +74,10 @@ function App() {
 
   getApiInterval = 0; // I just do this so I know I've cleared the interval
 
-  // collect all kanji per grade
-  let kanjiObj_deserialized = JSON.parse(localStorage.getItem("kanjiObj"));
+  let kanjiObj_deserialized = null
   useEffect(() => {
+    // collect all kanji per grade
+    kanjiObj_deserialized = JSON.parse(localStorage.getItem("kanjiObj"));
 
     if(kanjiObj_deserialized !== null) {
       allJoyoKanji.current = kanjiObj_deserialized;
