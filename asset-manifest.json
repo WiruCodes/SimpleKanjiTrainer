@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/SimpleKanjiTrainer/static/css/main.abd64e84.css",
+    "main.js": "/SimpleKanjiTrainer/static/js/main.c4f49075.js",
+    "index.html": "/SimpleKanjiTrainer/index.html",
+    "main.abd64e84.css.map": "/SimpleKanjiTrainer/static/css/main.abd64e84.css.map",
+    "main.c4f49075.js.map": "/SimpleKanjiTrainer/static/js/main.c4f49075.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.abd64e84.css",
+    "static/js/main.c4f49075.js"
+  ]
+}
