@@ -6,7 +6,6 @@ import { useEffect, useState, useRef } from 'react';
 import { getKanjiPerGrade, generateKanjiDetails, getKanji, shuffle, handleCompareRomanjiToKanji, skipKanji } from './kanjiFunctionLibrary';
 import StartScreen from './StartScreen';
 import EndDetails from './EndDetails'
-import { FOCUSABLE_SELECTOR } from '@testing-library/user-event/dist/utils';
 
 function App() {
   const allJoyoKanji = useRef({});
@@ -77,7 +76,7 @@ function App() {
   let kanjiObj_deserialized = null
   useEffect(() => {
     // collect all kanji per grade
-    kanjiObj_deserialized = JSON.parse(localStorage.getItem("kanjiObj"));
+    kanjiObj_deserialized !== null && (kanjiObj_deserialized = JSON.parse(localStorage.getItem("kanjiObj")));
 
     if(kanjiObj_deserialized !== null) {
       allJoyoKanji.current = kanjiObj_deserialized;
