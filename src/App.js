@@ -59,25 +59,20 @@ function App() {
       let kanjiObj_serialized = JSON.stringify(kanjiObj);
       
       localStorage.setItem("kanjiObj", kanjiObj_serialized);
+      clearInterval(getApiInterval)
+      console.log('bruh')
       // let kanjiObj_deserialized = JSON.parse(localStorage.getItem("kanjiObj"));
     }
   }
 
-  var getApiInterval = setInterval(apiComplete, 20);
+  var getApiInterval = setInterval(apiComplete, 500);
 
-  // When you want to cancel it:
+
+
+
+  // collect all kanji per grade
+  let kanjiObj_deserialized  = JSON.parse(localStorage.getItem("kanjiObj"));
   useEffect(() => {
-    apiKanjiComplete && clearInterval(getApiInterval);
-  }, [apiKanjiComplete])
-
-
-  getApiInterval = 0; // I just do this so I know I've cleared the interval
-
-  let kanjiObj_deserialized = null
-  useEffect(() => {
-    // collect all kanji per grade
-    kanjiObj_deserialized !== null && (kanjiObj_deserialized = JSON.parse(localStorage.getItem("kanjiObj")));
-
     if(kanjiObj_deserialized !== null) {
       allJoyoKanji.current = kanjiObj_deserialized;
       setApiKanjiComplete(true);
