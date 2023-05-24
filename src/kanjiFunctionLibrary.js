@@ -43,7 +43,7 @@ export async function getKanji(passedGradeList, totalWantedKanji, kanjiTotalCoun
     console.log(grade)
   });
   setCurrentKanjiCount(1);
-  console.log(kanjiCollector);
+  // console.log(kanjiCollector);
   setKanjiList(kanjiCollector);
 
   setInitiateShuffle(true);
@@ -51,7 +51,7 @@ export async function getKanji(passedGradeList, totalWantedKanji, kanjiTotalCoun
 
 export function shuffle(array, totalWantedKanji) {
   let currentIndex = array.length,  randomIndex;
-  console.log(array)
+  // console.log(array)
   // While there remain elements to shuffle.
   while (currentIndex != 0) {
 
@@ -63,9 +63,9 @@ export function shuffle(array, totalWantedKanji) {
     [array[currentIndex], array[randomIndex]] = [
       array[randomIndex], array[currentIndex]];
   }
-  console.log(array)
+  // console.log(array)
   let slicedArr = array.slice(0, totalWantedKanji);
-  console.log(slicedArr)
+  // console.log(slicedArr)
 
   return slicedArr;
 }

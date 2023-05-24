@@ -47,8 +47,8 @@ function App() {
     let gradeCheck = 'grade-8' in allJoyoKanji.current;
     let idxCheck = false;
     let detailsCheck = false;
-    gradeCheck && (idxCheck = '1129' in allJoyoKanji.current['grade-8']);
-    (gradeCheck && idxCheck) && (detailsCheck = 'details' in allJoyoKanji.current['grade-8']['1129']);
+    gradeCheck && (idxCheck = '0' in allJoyoKanji.current['grade-8']);
+    (gradeCheck && idxCheck) && (detailsCheck = 'details' in allJoyoKanji.current['grade-8']['0']);
 
     if(gradeCheck && idxCheck && detailsCheck) {
       setApiKanjiComplete(true);
@@ -60,7 +60,6 @@ function App() {
       
       localStorage.setItem("kanjiObj", kanjiObj_serialized);
       clearInterval(getApiInterval)
-      console.log('bruh')
       // let kanjiObj_deserialized = JSON.parse(localStorage.getItem("kanjiObj"));
     }
   }
@@ -86,17 +85,50 @@ function App() {
   }, []);
 
   // set kanji details for each kanji in grade
+  const ONE_SECOND = 100;
+  function delay(milliseconds) {
+    return new Promise(ok => setTimeout(ok, milliseconds));
+  }
+
+  // limit the number of requests for api and batch them
+  async function rateLimitedRequests (params) {
+    let allJoyoClone = { ...params }
+
+    while (Object.keys(allJoyoClone).length > 0) {
+        let startTime = Date.now();
+
+        for (let i=0; i<10; i++) {
+            let thisParam = allJoyoClone[Object.keys(allJoyoClone)[Object.keys(allJoyoClone).length - 1]];
+            delete allJoyoClone[`${Object.keys(allJoyoClone).length-1}`]
+            if (thisParam) {
+                generateKanjiDetails(params[Object.keys(allJoyoClone).length]);
+            }
+        }
+
+        let endTime = Date.now();
+        let requestTime = endTime - startTime;
+        let delayTime = ONE_SECOND - requestTime;
+
+        if (delayTime > 0) {
+            await delay(delayTime);
+        }
+    }
+
+    console.log(allJoyoKanji.current)
+  }
+
   useEffect(() => {
     console.log(allJoyoKanji.current)
     if(Object.keys(allJoyoKanji.current).length == 7 && kanjiObj_deserialized == null) {
 
       Object.keys(allJoyoKanji.current).forEach((grade) => {
+        rateLimitedRequests(allJoyoKanji.current[grade])
         
-        console.log(grade)
+        // console.log(allJoyoKanji.current[grade])
         
         Object.keys(allJoyoKanji.current[grade]).forEach((idx) => {
-          // console.log(idx);
-          generateKanjiDetails(allJoyoKanji.current[grade][idx]);
+          // console.log(allJoyoKanji.current[grade][idx]);
+          // generateKanjiDetails(allJoyoKanji.current[grade][idx]);
         });
       });
       apiComplete();
@@ -118,7 +150,7 @@ function App() {
   // set currentkanji value when kanjiList is complete
   useEffect(() => {
     setCurrentKanji(kanjiList[0]);
-    console.log(endScore)
+    // console.log(endScore)
   }, [kanjiList]);
   
 
