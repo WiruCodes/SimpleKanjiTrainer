@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/SimpleKanjiTrainer/static/css/main.abd64e84.css",
-    "main.js": "/SimpleKanjiTrainer/static/js/main.1b8b8af6.js",
+    "main.js": "/SimpleKanjiTrainer/static/js/main.b34f2c4d.js",
     "index.html": "/SimpleKanjiTrainer/index.html",
     "main.abd64e84.css.map": "/SimpleKanjiTrainer/static/css/main.abd64e84.css.map",
-    "main.1b8b8af6.js.map": "/SimpleKanjiTrainer/static/js/main.1b8b8af6.js.map"
+    "main.b34f2c4d.js.map": "/SimpleKanjiTrainer/static/js/main.b34f2c4d.js.map"
   },
   "entrypoints": [
     "static/css/main.abd64e84.css",
-    "static/js/main.1b8b8af6.js"
+    "static/js/main.b34f2c4d.js"
   ]
 }
