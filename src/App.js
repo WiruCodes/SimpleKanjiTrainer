@@ -29,7 +29,7 @@ function App() {
   const [endScore, setEndScore] = useState(0);
 
   const[delayDone, setDelayDone] = useState(false);
-
+  
   const[loadingCount, setLoadingCount] = useState(0);
   
   let startScreenGetKanjiValues = {allJoyoKanji, setWantedKanji, setKanjiLength, setCurrentKanjiCount, setKanjiList, setInitiateShuffle};
@@ -96,11 +96,13 @@ function App() {
   // limit the number of requests for api and batch them
   async function rateLimitedRequests (params) {
     let allJoyoClone = { ...params }
-
+    let kanjiApiIteration = 0;
     while (Object.keys(allJoyoClone).length > 0) {
         let startTime = Date.now();
 
-        for (let i=0; i<5; i++) {
+
+        for (let i=0; i < (kanjiApiIteration > 200 ? 15 : 3); i++) {
+            kanjiApiIteration++;
             let thisParam = allJoyoClone[Object.keys(allJoyoClone)[Object.keys(allJoyoClone).length - 1]];
             delete allJoyoClone[`${Object.keys(allJoyoClone).length-1}`]
             if (thisParam) {
