@@ -1,5 +1,5 @@
 import './App.css';
-import { Button, ChakraProvider, Grid, GridItem, Heading, Input, Spinner, Stack, StackDivider, Text, ColorModeScript, extendTheme, useColorMode, ThemeConfig } from '@chakra-ui/react'
+import { Button, ChakraProvider, Grid, GridItem, Heading, Input, Spinner, Stack, StackDivider, Text, ColorModeScript, extendTheme, useColorMode, ThemeConfig, Progress } from '@chakra-ui/react'
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
 import { Box } from '@chakra-ui/react';
 import { useEffect, useState, useRef } from 'react';
@@ -29,6 +29,8 @@ function App() {
   const [endScore, setEndScore] = useState(0);
 
   const[delayDone, setDelayDone] = useState(false);
+
+  const[loadingCount, setLoadingCount] = useState(0);
   
   let startScreenGetKanjiValues = {allJoyoKanji, setWantedKanji, setKanjiLength, setCurrentKanjiCount, setKanjiList, setInitiateShuffle};
 
@@ -71,6 +73,7 @@ function App() {
 
   // collect all kanji per grade
   let kanjiObj_deserialized  = JSON.parse(localStorage.getItem("kanjiObj"));
+  // console.log(kanjiObj_deserialized)
   useEffect(() => {
     if(kanjiObj_deserialized !== null) {
       allJoyoKanji.current = kanjiObj_deserialized;
@@ -97,11 +100,12 @@ function App() {
     while (Object.keys(allJoyoClone).length > 0) {
         let startTime = Date.now();
 
-        for (let i=0; i<10; i++) {
+        for (let i=0; i<5; i++) {
             let thisParam = allJoyoClone[Object.keys(allJoyoClone)[Object.keys(allJoyoClone).length - 1]];
             delete allJoyoClone[`${Object.keys(allJoyoClone).length-1}`]
             if (thisParam) {
                 generateKanjiDetails(params[Object.keys(allJoyoClone).length]);
+                setLoadingCount((prevState) => prevState + 1);
             }
         }
 
@@ -114,22 +118,13 @@ function App() {
         }
     }
 
-    console.log(allJoyoKanji.current)
+    // console.log(allJoyoKanji.current)
   }
 
   useEffect(() => {
-    console.log(allJoyoKanji.current)
-    if(Object.keys(allJoyoKanji.current).length == 7 && kanjiObj_deserialized == null) {
-
+    if(Object.keys(allJoyoKanji.current).length == 7 && kanjiObj_deserialized == null && initiateGetDetails == true) {
       Object.keys(allJoyoKanji.current).forEach((grade) => {
         rateLimitedRequests(allJoyoKanji.current[grade])
-        
-        // console.log(allJoyoKanji.current[grade])
-        
-        Object.keys(allJoyoKanji.current[grade]).forEach((idx) => {
-          // console.log(allJoyoKanji.current[grade][idx]);
-          // generateKanjiDetails(allJoyoKanji.current[grade][idx]);
-        });
       });
       apiComplete();
       // console.log(allJoyoKanji.current)
@@ -164,7 +159,12 @@ function App() {
     <ChakraProvider>
       <Box className="App" w='100vw' h='100vh' display='flex' justifyContent='center' alignItems='center'>
         <Box border='5px solid black' bg='tomato' w={['420px', '420px', '640px']} h={['420px', '420px', '640px']} p={4} color='white'>
-          {!apiKanjiComplete ? <Text w='100%' h='100%' fontSize={20} display='flex' justifyContent='center' alignItems='center'>Loading...</Text> : (kanjiList.length <= 0 && playingNow === false) ? <StartScreen getKanji={getKanji} startScreenGetKanjiValues={startScreenGetKanjiValues} setInitiateShuffle={setInitiateShuffle} /> : <Grid w='100%' h='100%' templateColumns='repeat(2, 1fr)' templateRows='repeat(6, 1fr)' gap={3}>
+          {!apiKanjiComplete ? 
+            <Box width='100%' height='100%' display='flex' flexDirection='column' justifyContent='center' alignItems='center'>
+              <Text marginBottom='5px'>Getting All Kanji</Text>
+              <Progress value={(loadingCount / 2136) * 100}  size={'lg'} width={['200px','200px', '300px']}/>
+            </Box> : 
+            (kanjiList.length <= 0 && playingNow === false) ? <StartScreen getKanji={getKanji} startScreenGetKanjiValues={startScreenGetKanjiValues} setInitiateShuffle={setInitiateShuffle} /> : <Grid w='100%' h='100%' templateColumns='repeat(2, 1fr)' templateRows='repeat(6, 1fr)' gap={3}>
             <GridItem border='5px solid black' colSpan={1} rowSpan={4}  bg='blue.500'>
               <Box id='kanji-container' display='flex' w='100%' h='100%' alignItems='center' justifyContent='center'>
               {(kanjiList.length <= 0 && playingNow === true) ? <EndDetails setDelayDone={setDelayDone} endScore={endScore} setEndScore={setEndScore} kanjiLength={kanjiLength} setFinishedKanjiList={setFinishedKanjiList} setPlayingNow={setPlayingNow} setWantedKanji={setWantedKanji} setCurrentKanjiCount={setCurrentKanjiCount} setKanjiList={setKanjiList} /> : delayDone ? <Text fontSize={['80px', '80px', '120px']}>{kanjiList[0].kanji}</Text> : <Spinner size='xl' />}

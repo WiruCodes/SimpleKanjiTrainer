@@ -12,9 +12,12 @@ export async function getKanjiPerGrade(grade, allJoyoKanji, setInitiateGetDetail
     allJoyoKanji.current[grade] = {...allJoyoKanji.current[grade], [idx]: {kanji: jsonData[i]}};
   }
 
-  if(grade == 'grade-8') {
-    setInitiateGetDetails(true);
-  }
+  const gradeLengthIntervalCheck = setInterval(() => {
+    if(Object.keys(allJoyoKanji.current).length == 7) {
+      setInitiateGetDetails(true);
+      clearInterval(gradeLengthIntervalCheck);
+    }
+  }, 100)
 
 }
 
@@ -22,7 +25,7 @@ export async function generateKanjiDetails(neededKanji){
   if(neededKanji) {
     const response = await fetch(kanjiUrlStarter + "/v1/kanji/" + neededKanji.kanji);
     const jsonData = await response.json();
-    console.log(jsonData);
+    // console.log(jsonData);
     neededKanji.details = jsonData;
   }
 }
@@ -120,6 +123,9 @@ export function skipKanji(passedKanji, kanjiLength, kanjiList, setKanjiList, set
   
 
   document.getElementById('skipButton').disabled = true;
-  setTimeout(() => {document.getElementById('skipButton').disabled = false}, 100);
+  setTimeout(() => {
+    console.log(kanjiList.length);
+    kanjiList.length > 1 && (document.getElementById('skipButton').disabled = false);
+  }, 100);
 
 }
